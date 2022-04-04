@@ -1,5 +1,5 @@
 FROM debian:bullseye
-LABEL maintainer="diodonfrost <diodon.frost@diodonfrost.me>"
+LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     software-properties-common \
@@ -10,7 +10,8 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     apt-transport-https \
     curl \
     init \
-    openssh-server openssh-client \
+    openssh-server \
+    openssh-client \
     systemd \
     unzip \
     rsync \

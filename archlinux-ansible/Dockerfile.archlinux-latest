@@ -1,5 +1,5 @@
 FROM archlinux:base
-LABEL maintainer="diodonfrost <diodon.frost@diodonfrost.me>"
+LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 RUN \
   pacman --noconfirm --sync --refresh --sysupgrade systemd procps && \

@@ -1,5 +1,5 @@
 FROM alpine:latest
-LABEL maintainer="diodonfrost <diodon.frost@diodonfrost.me>"
+LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 # Install Ansible
 RUN apk add --no-cache git ansible sudo openssh unzip tar rsync libc6-compat fuse-dev

@@ -1,5 +1,5 @@
 FROM opensuse/tumbleweed
-LABEL maintainer="diodonfrost <diodon.frost@diodonfrost.me>"
+LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 ENV container docker
 

@@ -1,5 +1,5 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
-LABEL maintainer="diodonfrost <diodon.frost@diodonfrost.me>"
+LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 # Install systemd -- See https://hub.docker.com/_/centos/
 RUN microdnf -y install systemd systemd-libs && microdnf clean all

@@ -166,7 +166,7 @@ jobs:
       - name: Push Docker image to Github Docker registry
         run: |
           # Login on Github Docker registry before pushing
-          echo "${{ secrets.GH_REGISTRY_TOKEN }}" | docker login docker.pkg.github.com -u bodsch --password-stdin
+          echo "${{ secrets.GH_DOCKER_REGISTRY_TOKEN }}" | docker login docker.pkg.github.com -u bodsch --password-stdin
 
           # Pushing image to Github Docker registry
           docker tag bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \

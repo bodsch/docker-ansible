@@ -4,38 +4,39 @@ FROM artixlinux/base:latest
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 RUN \
-# enable community repo
-    echo -e '[community]\nInclude = /etc/pacman.d/mirrorlist-arch' >> /etc/pacman.conf && \
-# update package tree
+    # update package tree
     pacman \
         --noconfirm --sync --refresh --sysupgrade && \
-# install openrc as init system
+    # install openrc as init system
     pacman --noconfirm --sync \
-        openrc \
+       openrc \
+       openssh-openrc \
+       rsync-openrc \
+       elogind-openrc && \
+    pacman --noconfirm --sync \
         base \
         procps \
         git \
         python-pip \
         sudo \
-        openssh-openrc \
         unzip \
-        tar \
-        ansible \
-        rsync-openrc && \
-# update pip and install ansible
-    python -m pip install --upgrade pip && \
-# Create ansible directory
+        tar && \
+    # enable community repo
+    echo -e '[community]\nServer = http://mirror.cj2.nl/archlinux/$repo/os/$arch' >> /etc/pacman.conf && \
+    pacman \
+        --noconfirm --sync --refresh --sysupgrade && \
+    python -m pip install ansible && \
+    # Create ansible directory
     mkdir -p /etc/ansible && \
     echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
-# cleanup
+    # cleanup
     pacman \
         --noconfirm --sync -cc && \
     rm -rf \
         /tmp/* \
-        /usr/portage/* && \
         /usr/bin/find \
             /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true
 
 VOLUME ["/sys/fs/cgroup"]
 
-ENTRYPOINT  ["/usr/bin/init"]
+ENTRYPOINT  ["/sbin/init"]

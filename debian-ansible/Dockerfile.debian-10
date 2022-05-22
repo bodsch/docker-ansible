@@ -1,7 +1,10 @@
 FROM debian:buster
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
+RUN \
+  apt-get update -y && \
+  apt-get install -y --no-install-recommends \
+    python3-apt \
     software-properties-common \
     git \
     ansible \
@@ -16,11 +19,10 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     unzip \
     rsync \
     sudo \
-    fuse \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN ln -s /usr/bin/python3 /usr/bin/python
-
-RUN mkdir -p /etc/ansible && echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
+    fuse && \
+  rm -rf /var/lib/apt/lists/* && \
+  ln -s /usr/bin/python3 /usr/bin/python && \
+  mkdir -p /etc/ansible && \
+  echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
 
 ENTRYPOINT ["/bin/systemd"]

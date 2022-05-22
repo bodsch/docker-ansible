@@ -4,6 +4,7 @@ LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 RUN \
   apt-get update -y && \
   apt-get install -y --no-install-recommends \
+    python3-apt \
     software-properties-common \
     git \
     ansible \

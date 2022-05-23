@@ -3,23 +3,37 @@ LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 RUN \
   pacman --noconfirm --sync --refresh --sysupgrade systemd procps && \
-  pacman --noconfirm --sync -cc && \
     (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-    rm -f /lib/systemd/system/multi-user.target.wants/*;\
-    rm -f /etc/systemd/system/*.wants/*;\
-    rm -f /lib/systemd/system/local-fs.target.wants/*; \
-    rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-    rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-    rm -f /lib/systemd/system/basic.target.wants/*;\
-    rm -f /lib/systemd/system/anaconda.target.wants/* && \
+    rm -f /lib/systemd/system/default.target                 ; \
+    rm -f /lib/systemd/system/multi-user.target.wants/*      ; \
+    rm -f /lib/systemd/system/local-fs.target.wants/*        ; \
+    rm -f /lib/systemd/system/sockets.target.wants/*udev*    ; \
+    rm -f /lib/systemd/system/sockets.target.wants/*initctl* ; \
+    rm -f /lib/systemd/system/basic.target.wants/*           ; \
+    rm -f /lib/systemd/system/anaconda.target.wants/*        ; \
+    rm -f /lib/systemd/system/systemd-timesyncd*             ; \
+    rm -f /lib/systemd/system/systemd-resolved*              ; \
+    rm -f /lib/systemd/system/systemd-networkd*              ; \
+    rm -f /lib/systemd/system/systemd-homed*                 ; \
+    rm -f /lib/systemd/system/systemd-userdbd*               ; \
+    rm -f /lib/systemd/system/remote-cryptsetup*             ; \
+    rm -rf /lib/systemd/system/remote-fs*                     ; \
+    rm -f /lib/systemd/system/systemd-network-generator*     ; \
+    rm -f /lib/systemd/system/systemd-pstore*                ; \
+    rm -f /lib/systemd/system/systemd-boot-update            ; \
+    rm -f /etc/systemd/system/dbus-org.freedesktop*          ; \
+    rm -f /etc/systemd/system/*.wants/*                      && \
   pacman --noconfirm --sync --refresh git python-pip sudo openssh gawk unzip tar rsync fuse && \
   pacman --noconfirm --sync -cc && \
   # Install ansible
   # python -m pip install --upgrade pip && \
   python -m pip install ansible && \
   mkdir /etc/ansible && \
-    echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
+    echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
+  rm -rf \
+    /root/.cache \
+    /var/cache/pacman/pkg/*
 
-VOLUME ["/sys/fs/cgroup"]
+# VOLUME ["/sys/fs/cgroup"]
 
 ENTRYPOINT ["/usr/lib/systemd/systemd"]

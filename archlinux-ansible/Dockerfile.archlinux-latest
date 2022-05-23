@@ -32,7 +32,13 @@ RUN \
     echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
   rm -rf \
     /root/.cache \
-    /var/cache/pacman/pkg/*
+    /var/cache/pacman/pkg/* && \
+  find / -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete && \
+  echo "----------------------------------------------------------------------------" > .version && \
+  echo "  python      : $(python --version | cut -d ' ' -f2)" >> .version && \
+  echo "  ansible     : $(ansible --version | head -n 1 | awk -F'[][]' '{print $2}' | cut -d ' ' -f2)" >> .version && \
+  echo "----------------------------------------------------------------------------" >> .version && \
+  cat .version
 
 # VOLUME ["/sys/fs/cgroup"]
 

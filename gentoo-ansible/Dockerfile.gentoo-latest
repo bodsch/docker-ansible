@@ -1,40 +1,65 @@
+# Use the empty image with the portage tree as the first stage
+FROM gentoo/portage:latest as portage
+
+# ------------------------------------------------------------------------------------------------
+
+# Gentoo stage3 is the second stage, basically an unpacked Gentoo Linux
 FROM gentoo/stage3:amd64-systemd
 
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
-ARG FEATURES="-ipc-sandbox -network-sandbox -pid-sandbox"
+ARG FEATURES="-ipc-sandbox -network-sandbox -pid-sandbox -sandbox -usersandbox"
+
+# Copy the portage tree into the current stage
+COPY --from=portage /var/db/repos/gentoo /var/db/repos/gentoo
 
 # update portage tree
 RUN \
-    emerge-webrsync && \
-    echo 'USE="-bindist"' >> /etc/portage/make.conf && \
-    echo 'MAKEOPTS="-j4"' >> /etc/portage/make.conf && \
-    echo 'EMERGE_DEFAULT_OPTS="--jobs=4"' >> /etc/portage/make.conf && \
-    echo 'dev-lang/python sqlite' >> /etc/portage/package.use/python && \
-    echo 'net-libs/zeromq drafts' >> /etc/portage/package.use/zeromq && \
-    emerge --quiet --sync && \
-# remove setuptools and certifi, otherwise they will generate errors
-    emerge --quiet --unmerge \
-        dev-python/setuptools \
-        dev-python/certifi && \
-# reinstall portage if an update available
-    emerge --quiet --oneshot sys-apps/portage && \
-# install ansible and some tools
-    emerge --quiet \
-        app-portage/gentoolkit \
-        net-misc/rsync \
-        net-misc/openssh \
-        app-admin/sudo \
-        sys-fs/fuse:0 \
-        app-admin/ansible && \
-# Create ansible directory
-    mkdir -p /etc/ansible && \
-    echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
-# cleanup
-    rm -rf \
-        /tmp/* \
-        /usr/portage/* && \
-        /usr/bin/find \
-            /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true
+  echo '# MAKEOPTS="-j2"' >> /etc/portage/make.conf && \
+  echo '# EMERGE_DEFAULT_OPTS="--jobs=2"' >> /etc/portage/make.conf && \
+  echo 'dev-lang/python sqlite' >> /etc/portage/package.use/python && \
+  echo 'net-libs/zeromq drafts' >> /etc/portage/package.use/zeromq && \
+  # reinstall portage if an update available
+  emerge --oneshot sys-apps/portage && \
+  emerge --quiet \
+    app-portage/gentoolkit \
+    app-portage/euses && \
+  euse --disable bindist
+
+RUN \
+  emerge \
+    dev-lang/rust
+
+RUN \
+  # install ansible and some tools
+  emerge --quiet \
+    app-portage/gentoolkit \
+    net-misc/rsync \
+    net-misc/openssh
+
+RUN \
+  emerge --quiet \
+    app-admin/sudo \
+    sys-fs/fuse:0 \
+    app-admin/ansible
+
+RUN \
+  # Create ansible directory
+  mkdir -p /etc/ansible && \
+  echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
+  # cleanup
+  rm -rf \
+    /root/.cache \
+    /tmp/* \
+    /usr/portage/* && \
+    /usr/bin/find \
+        /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true  && \
+    /usr/bin/find \
+        / -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete && \
+  echo "----------------------------------------------------------------------------" > .version && \
+  echo "  python      : $(python --version | cut -d ' ' -f2)" >> .version && \
+  echo "  ansible     : $(ansible --version | head -n 1 | awk -F'[][]' '{print $2}' | cut -d ' ' -f2)" >> .version && \
+  echo "----------------------------------------------------------------------------" >> .version && \
+  cat .version
 
 ENTRYPOINT ["/usr/lib/systemd/systemd"]

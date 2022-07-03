@@ -2,8 +2,9 @@ FROM debian:bullseye
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 RUN \
-  apt-get update -y && \
-  apt-get install -y --no-install-recommends \
+  apt-get update  --assume-yes && \
+  apt-get upgrade --assume-yes && \
+  apt-get install --assume-yes --no-install-recommends \
     python3-apt \
     software-properties-common \
     git \
@@ -20,9 +21,28 @@ RUN \
     rsync \
     sudo \
     fuse && \
-  rm -rf /var/lib/apt/lists/* && \
-  ln -s /usr/bin/python3 /usr/bin/python && \
+  ln --symbolic \
+    /usr/bin/python3 /usr/bin/python && \
   mkdir -p /etc/ansible && \
-  echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
+  echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts && \
+  apt autoremove \
+    --assume-yes && \
+  apt-get clean && \
+  rm --recursive --force \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/cache/debconf/* \
+    /usr/share/doc/* \
+    /root/.cache \
+    /root/.config 2> /dev/null
+
+RUN \
+  find / -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete && \
+  echo "----------------------------------------------------------------------------" > .version && \
+  echo "  python      : $(python --version | cut -d ' ' -f2)" >> .version && \
+  echo "  ansible     : $(ansible --version | head -n 1 | awk -F'[][]' '{print $2}' | cut -d ' ' -f2)" >> .version && \
+  echo "----------------------------------------------------------------------------" >> .version && \
+  cat .version
+
 
 ENTRYPOINT ["/bin/systemd"]

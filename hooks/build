@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -x
+
+docker build \
+  --rm \
+  --file=${DISTRIBUTION}-ansible/Dockerfile.${DISTRIBUTION}-${DISTRIBUTION_VERSION} \
+  --tag=${DOCKER_NAME_SPACE}/ansible-${DISTRIBUTION}:${DISTRIBUTION_VERSION} \
+  ${DISTRIBUTION}-ansible

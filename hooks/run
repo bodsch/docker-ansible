@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Custom build for Docker Hub
+# see: https://medium.com/microscaling-systems/labelling-automated-builds-on-docker-hub-f3d073fb8e1
+
+[[ -e hooks/environment ]] && . hooks/environment
+
+docker run \
+  --rm \
+  --name ${DOCKER_NAME_SPACE}-ansible-${DISTRIBUTION}-${DISTRIBUTION_VERSION} \
+  --hostname ${DOCKER_NAME_SPACE}-ansible-${DISTRIBUTION}-${DISTRIBUTION_VERSION} \
+  --privileged \
+  ${PORTS} \
+  ${VOLUMES} \
+  ${ENV} \
+  --tag=${DOCKER_NAME_SPACE}/ansible-${DISTRIBUTION}:${DISTRIBUTION_VERSION}

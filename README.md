@@ -66,3 +66,13 @@ Provides docker containers use for testing ansible role on some operating system
 [bodsch/ansible-rockylinux:8.4-rc1]: https://hub.docker.com/r/bodsch/ansible-rockylinux
 [bodsch/ansible-rockylinux:8]: https://hub.docker.com/r/bodsch/ansible-rockylinux
 [bodsch/ansible-almalinux:8]: https://hub.docker.com/r/bodsch/ansible-almalinux
+
+## build
+
+```
+make -e DISTRIBUTION=rockylinux -e DISTRIBUTION_VERSION=8
+
+make -e DISTRIBUTION=archlinux -e DISTRIBUTION_VERSION=latest
+
+make buildx -e DISTRIBUTION=archlinux -e DISTRIBUTION_VERSION=latest -e PLATFORM=linux/amd64
+```

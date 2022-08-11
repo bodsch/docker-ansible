@@ -1,0 +1,15 @@
+#
+# Universe is a repository maintained by Artix package maintainers and contains some programs
+# which are not provided in the 4 main repositories - mostly programs from the AUR, like web
+# browsers (Firefox-ESR, Librewolf, ungoogled-chromium, brave, tor-browser), Thunderbird with birdtray,
+# FreeTube, programs for hybrid GPUs (optimus-manager, gamemodeswitch, etc.), Spotifyd, ZFS, Zramen,
+# and other useful packages (e.g. nvidia-390xx driver).
+# Recently, artix-archlinux-support, which provides systemd and systemd-libs stubs as compatibility
+# props, was moved into [universe].
+
+Server = https://universe.artixlinux.org/$arch
+Server = https://mirror1.artixlinux.org/universe/$arch
+Server = https://mirror.pascalpuffke.de/artix-universe/$arch
+Server = https://artixlinux.qontinuum.space/artixlinux/universe/os/$arch
+Server = https://mirror1.cl.netactuate.com/artix/universe/$arch
+Server = https://ftp.crifo.org/artix-universe/

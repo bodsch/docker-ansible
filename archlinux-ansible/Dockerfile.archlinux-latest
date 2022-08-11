@@ -1,9 +1,14 @@
 FROM archlinux:base
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
+COPY rootfs/ /
+
 RUN \
-  pacman --noconfirm --sync --refresh --sysupgrade systemd procps && \
-    (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+  pacman \
+    --noconfirm --sync --refresh --sysupgrade \
+      systemd \
+      procps && \
+  (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
     rm -f /lib/systemd/system/default.target                 ; \
     rm -f /lib/systemd/system/multi-user.target.wants/*      ; \
     rm -f /lib/systemd/system/local-fs.target.wants/*        ; \
@@ -23,22 +28,34 @@ RUN \
     rm -f /lib/systemd/system/systemd-boot-update            ; \
     rm -f /etc/systemd/system/dbus-org.freedesktop*          ; \
     rm -f /etc/systemd/system/*.wants/*                      && \
-  pacman --noconfirm --sync --refresh git python-pip sudo openssh gawk unzip tar rsync fuse && \
-  pacman --noconfirm --sync -cc && \
+
+  # update package tree
+  pacman \
+    --noconfirm --sync --refresh --sysupgrade && \
+  pacman \
+    --noconfirm --sync --refresh \
+      ansible \
+      git \
+      python-pip \
+      sudo \
+      openssh \
+      gawk \
+      unzip \
+      tar \
+      rsync \
+      fuse && \
   # Install ansible
   # python -m pip install --upgrade pip && \
-  python -m pip install ansible && \
-  mkdir /etc/ansible && \
-    echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
+  # python -m pip install ansible && \
+  echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
+  # cleanup
+  pacman \
+    --noconfirm --sync -cc && \
+  /usr/bin/info.sh && \
   rm -rf \
-    /root/.cache \
-    /var/cache/pacman/pkg/* && \
-  find / -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete && \
-  echo "----------------------------------------------------------------------------" > .version && \
-  echo "  python      : $(python --version | cut -d ' ' -f2)" >> .version && \
-  echo "  ansible     : $(ansible --version | head -n 1 | awk -F'[][]' '{print $2}' | cut -d ' ' -f2)" >> .version && \
-  echo "----------------------------------------------------------------------------" >> .version && \
-  cat .version
+    /tmp/* \
+    /usr/bin/find \
+      /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true
 
 # VOLUME ["/sys/fs/cgroup"]
 

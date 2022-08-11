@@ -1,41 +1,55 @@
-
 FROM artixlinux/base:latest
-
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
+COPY rootfs/ /
+
 RUN \
-    # update package tree
-    pacman \
-        --noconfirm --sync --refresh --sysupgrade && \
-    # install openrc as init system
-    pacman --noconfirm --sync \
-       openrc \
-       openssh-openrc \
-       rsync-openrc \
-       elogind-openrc && \
-    pacman --noconfirm --sync \
-        base \
-        procps \
-        git \
-        python-pip \
-        sudo \
-        unzip \
-        tar && \
-    # enable community repo
-    echo -e '[community]\nServer = http://mirror.cj2.nl/archlinux/$repo/os/$arch' >> /etc/pacman.conf && \
-    pacman \
-        --noconfirm --sync --refresh --sysupgrade && \
-    python -m pip install ansible && \
-    # Create ansible directory
-    mkdir -p /etc/ansible && \
-    echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
-    # cleanup
-    pacman \
-        --noconfirm --sync -cc && \
-    rm -rf \
-        /tmp/* \
-        /usr/bin/find \
-            /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true
+
+  # update package tree
+  pacman \
+    --noconfirm --sync --refresh --sysupgrade && \
+  # fix this: WARNING: server 'gpg-agent' is older than us ...
+  gpgconf \
+    --kill all && \
+  pacman-key \
+    --init && \
+  # import new artix keyring and keyring for archlinux
+  pacman \
+    --noconfirm --sync \
+      archlinux-keyring \
+      artix-keyring && \
+  #
+  pacman-key \
+    --populate archlinux artix && \
+  # install openrc as init system
+  pacman \
+    --noconfirm --sync \
+      openrc \
+      openssh-openrc \
+      rsync-openrc \
+      elogind-openrc && \
+  pacman \
+    --noconfirm --sync \
+      ansible \
+      base \
+      procps \
+      git \
+      python-pip \
+      sudo \
+      unzip \
+      tar && \
+  # python -m pip install ansible && \
+  # Create ansible directory
+  mkdir -p /etc/ansible && \
+  echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
+  # cleanup
+  pacman \
+    --noconfirm --sync -cc && \
+  /usr/bin/info.sh && \
+  rm -rf \
+    /tmp/* \
+    /usr/bin/find \
+      /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true
 
 VOLUME ["/sys/fs/cgroup"]
 

@@ -22,13 +22,12 @@ RUN \
     rm -f /lib/systemd/system/systemd-homed*                 ; \
     rm -f /lib/systemd/system/systemd-userdbd*               ; \
     rm -f /lib/systemd/system/remote-cryptsetup*             ; \
-    rm -rf /lib/systemd/system/remote-fs*                     ; \
+    rm -rf /lib/systemd/system/remote-fs*                    ; \
     rm -f /lib/systemd/system/systemd-network-generator*     ; \
     rm -f /lib/systemd/system/systemd-pstore*                ; \
     rm -f /lib/systemd/system/systemd-boot-update            ; \
     rm -f /etc/systemd/system/dbus-org.freedesktop*          ; \
     rm -f /etc/systemd/system/*.wants/*                      && \
-
   # update package tree
   pacman \
     --noconfirm --sync --refresh --sysupgrade && \
@@ -36,6 +35,7 @@ RUN \
     --noconfirm --sync --refresh \
       ansible \
       git \
+      python-setuptools \
       python-pip \
       sudo \
       openssh \

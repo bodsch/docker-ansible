@@ -4,10 +4,12 @@ LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 COPY rootfs/ /
 
 RUN \
-
   # update package tree
   pacman \
-    --noconfirm --sync --refresh --sysupgrade && \
+    --noconfirm \
+    --sync \
+    --refresh \
+    --sysupgrade && \
   # fix this: WARNING: server 'gpg-agent' is older than us ...
   gpgconf \
     --kill all && \
@@ -15,25 +17,33 @@ RUN \
     --init && \
   # import new artix keyring and keyring for archlinux
   pacman \
-    --noconfirm --sync \
+    --noconfirm \
+    --sync \
       archlinux-keyring \
       artix-keyring && \
-  #
+  # fix this: WARNING: server 'gpg-agent' is older than us ...
+  gpgconf \
+    --kill all && \
   pacman-key \
-    --populate archlinux artix && \
+    --populate \
+      archlinux \
+      artix && \
   # install openrc as init system
   pacman \
-    --noconfirm --sync \
+    --noconfirm \
+    --sync \
       openrc \
       openssh-openrc \
       rsync-openrc \
       elogind-openrc && \
   pacman \
-    --noconfirm --sync \
+    --noconfirm \
+    --sync \
       ansible \
       base \
       procps \
       git \
+      python-setuptools \
       python-pip \
       sudo \
       unzip \
@@ -44,7 +54,9 @@ RUN \
   echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
   # cleanup
   pacman \
-    --noconfirm --sync -cc && \
+    --noconfirm \
+    --sync \
+    -cc && \
   /usr/bin/info.sh && \
   rm -rf \
     /tmp/* \

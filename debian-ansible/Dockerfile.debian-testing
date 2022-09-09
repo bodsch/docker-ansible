@@ -1,7 +1,12 @@
 FROM debian:testing
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
+COPY rootfs/ /
+
+RUN \
+  apt-get update  --assume-yes && \
+  apt-get upgrade --assume-yes && \
+  apt-get install --assume-yes --no-install-recommends \
     git \
     python3-pip \
     gnupg2 \
@@ -9,15 +14,27 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     apt-transport-https \
     curl \
     init \
-    openssh-server openssh-client \
+    openssh-server \
+    openssh-client \
     systemd \
     unzip \
     rsync \
     sudo \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN python3 -m pip install ansible
-
-RUN mkdir -p /etc/ansible && echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
+    ansible && \
+  ln --symbolic \
+    /usr/bin/python3 /usr/bin/python && \
+  mkdir -p /etc/ansible && \
+  echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts && \
+  apt autoremove \
+    --assume-yes && \
+  apt-get clean && \
+  rm --recursive --force \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/cache/debconf/* \
+    /usr/share/doc/* \
+    /root/.cache \
+    /root/.config 2> /dev/null && \
+  /usr/bin/info.sh
 
 ENTRYPOINT ["/bin/systemd"]

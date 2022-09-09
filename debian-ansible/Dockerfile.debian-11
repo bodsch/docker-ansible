@@ -1,6 +1,8 @@
 FROM debian:bullseye
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
+COPY rootfs/ /
+
 RUN \
   apt-get update  --assume-yes && \
   apt-get upgrade --assume-yes && \
@@ -16,6 +18,7 @@ RUN \
     init \
     openssh-server \
     openssh-client \
+    python3-pip \
     systemd \
     unzip \
     rsync \
@@ -34,15 +37,7 @@ RUN \
     /var/cache/debconf/* \
     /usr/share/doc/* \
     /root/.cache \
-    /root/.config 2> /dev/null
-
-RUN \
-  find / -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete && \
-  echo "----------------------------------------------------------------------------" > .version && \
-  echo "  python      : $(python --version | cut -d ' ' -f2)" >> .version && \
-  echo "  ansible     : $(ansible --version | head -n 1 | awk -F'[][]' '{print $2}' | cut -d ' ' -f2)" >> .version && \
-  echo "----------------------------------------------------------------------------" >> .version && \
-  cat .version
-
+    /root/.config 2> /dev/null && \
+  /usr/bin/info.sh
 
 ENTRYPOINT ["/bin/systemd"]

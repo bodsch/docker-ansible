@@ -13,6 +13,8 @@ ARG FEATURES="-ipc-sandbox -network-sandbox -pid-sandbox -sandbox -usersandbox"
 # Copy the portage tree into the current stage
 COPY --from=portage /var/db/repos/gentoo /var/db/repos/gentoo
 
+COPY rootfs/ /
+
 # update portage tree
 RUN \
   echo '# MAKEOPTS="-j2"' >> /etc/portage/make.conf && \
@@ -24,26 +26,18 @@ RUN \
   emerge --quiet \
     app-portage/gentoolkit \
     app-portage/euses && \
-  euse --disable bindist
-
-RUN \
+  euse --disable bindist && \
   emerge \
-    dev-lang/rust
-
-RUN \
+    dev-lang/rust-bin && \
   # install ansible and some tools
   emerge --quiet \
     app-portage/gentoolkit \
     net-misc/rsync \
-    net-misc/openssh
-
-RUN \
+    net-misc/openssh && \
   emerge --quiet \
     app-admin/sudo \
     sys-fs/fuse:0 \
-    app-admin/ansible
-
-RUN \
+    app-admin/ansible && \
   # Create ansible directory
   mkdir -p /etc/ansible && \
   echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
@@ -56,10 +50,6 @@ RUN \
         /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true  && \
     /usr/bin/find \
         / -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete && \
-  echo "----------------------------------------------------------------------------" > .version && \
-  echo "  python      : $(python --version | cut -d ' ' -f2)" >> .version && \
-  echo "  ansible     : $(ansible --version | head -n 1 | awk -F'[][]' '{print $2}' | cut -d ' ' -f2)" >> .version && \
-  echo "----------------------------------------------------------------------------" >> .version && \
-  cat .version
+  /usr/bin/info.sh
 
 ENTRYPOINT ["/usr/lib/systemd/systemd"]

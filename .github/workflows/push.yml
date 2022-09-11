@@ -18,6 +18,9 @@ jobs:
           - image: almalinux
             version: "8"
             platform: "linux/amd64,linux/arm64/v8"
+          - image: almalinux
+            version: "9"
+            platform: "linux/amd64,linux/arm64/v8"
 
           - image: alpine
             version: "latest"
@@ -52,12 +55,15 @@ jobs:
           - image: oraclelinux
             version: "8"
             platform: "linux/amd64,linux/arm64/v8"
+          - image: oraclelinux
+            version: "9"
+            platform: "linux/amd64,linux/arm64/v8"
 
           - image: rockylinux
             version: "8"
             platform: "linux/amd64"
           - image: rockylinux
-            version: "8.4-rc1"
+            version: "9"
             platform: "linux/amd64"
 
           - image: ubuntu

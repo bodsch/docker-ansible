@@ -1,4 +1,4 @@
-FROM oraclelinux:8
+FROM oraclelinux:9
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 COPY rootfs/ /

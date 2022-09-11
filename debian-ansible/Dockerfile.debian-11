@@ -8,6 +8,8 @@ RUN \
   apt-get upgrade --assume-yes && \
   apt-get install --assume-yes --no-install-recommends \
     python3-apt \
+    python3-setuptools \
+    python3-pip \
     software-properties-common \
     git \
     ansible \

@@ -57,11 +57,11 @@ RUN \
     --noconfirm \
     --sync \
     -cc && \
-  /usr/bin/info.sh && \
   rm -rf \
     /tmp/* \
     /usr/bin/find \
-      /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true
+      /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true && \
+  /usr/bin/info.sh
 
 VOLUME ["/sys/fs/cgroup"]
 

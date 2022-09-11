@@ -9,7 +9,17 @@ RUN \
     --noconfirm \
     --sync \
     --refresh \
-    --sysupgrade && \
+    --sysupgrade
+
+#RUN \
+#  sed -i \
+#    -e 's|SigLevel    = Required DatabaseOptionals|SigLevel    = Optional TrustAll|' /etc/pacman.conf
+
+RUN \
+  pacman \
+    --noconfirm \
+    --sync \
+      archlinux-keyring && \
   # fix this: WARNING: server 'gpg-agent' is older than us ...
   gpgconf \
     --kill all && \
@@ -27,7 +37,9 @@ RUN \
   pacman-key \
     --populate \
       archlinux \
-      artix && \
+      artix
+
+RUN \
   # install openrc as init system
   pacman \
     --noconfirm \
@@ -48,7 +60,6 @@ RUN \
       sudo \
       unzip \
       tar && \
-  # python -m pip install ansible && \
   # Create ansible directory
   mkdir -p /etc/ansible && \
   echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
@@ -65,4 +76,4 @@ RUN \
 
 VOLUME ["/sys/fs/cgroup"]
 
-ENTRYPOINT  ["/sbin/init"]
+ENTRYPOINT  ["/sbin/openrc-init"]

@@ -55,11 +55,15 @@ RUN \
       base \
       procps \
       git \
+      syslog-ng \
+      syslog-ng-openrc \
       python-setuptools \
       python-pip \
       sudo \
       unzip \
       tar && \
+  rc-update add \
+    syslog-ng default && \
   # Create ansible directory
   mkdir -p /etc/ansible && \
   echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \

@@ -9,25 +9,26 @@ RUN \
       systemd \
       procps && \
   (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-    # rm -f /lib/systemd/system/default.target                 ; \
-    rm -f /lib/systemd/system/multi-user.target.wants/*      ; \
-    rm -f /lib/systemd/system/local-fs.target.wants/*        ; \
-    rm -f /lib/systemd/system/sockets.target.wants/*udev*    ; \
-    rm -f /lib/systemd/system/sockets.target.wants/*initctl* ; \
-    rm -f /lib/systemd/system/basic.target.wants/*           ; \
-    rm -f /lib/systemd/system/anaconda.target.wants/*        ; \
-    rm -f /lib/systemd/system/systemd-timesyncd*             ; \
-    rm -f /lib/systemd/system/systemd-resolved*              ; \
-    rm -f /lib/systemd/system/systemd-networkd*              ; \
-    rm -f /lib/systemd/system/systemd-homed*                 ; \
-    rm -f /lib/systemd/system/systemd-userdbd*               ; \
-    rm -f /lib/systemd/system/remote-cryptsetup*             ; \
-    rm -rf /lib/systemd/system/remote-fs*                    ; \
+    rm -vf /lib/systemd/system/multi-user.target.wants/*      ; \
+    rm -vf /lib/systemd/system/local-fs.target.wants/*        ; \
+    rm -vf /lib/systemd/system/sockets.target.wants/*udev*    ; \
+    rm -vf /lib/systemd/system/sockets.target.wants/*initctl* ; \
+    rm -vf /lib/systemd/system/basic.target.wants/*           ; \
+    rm -vf /lib/systemd/system/anaconda.target.wants/*        ; \
+    rm -vf /lib/systemd/system/systemd-timesyncd*             ; \
+    rm -vf /lib/systemd/system/systemd-resolved*              ; \
+    rm -vf /lib/systemd/system/systemd-networkd*              ; \
+    rm -vf /lib/systemd/system/systemd-homed*                 ; \
+    rm -vf /lib/systemd/system/systemd-userdbd*               ; \
+    rm -vf /lib/systemd/system/remote-cryptsetup*             ; \
+    rm -vrf /lib/systemd/system/remote-fs*                    ; \
+    rm -vf /etc/systemd/system/dbus-org.freedesktop*          ; \
+    rm -vf /etc/systemd/system/*.wants/*                      && \
+    #
     # rm -f /lib/systemd/system/systemd-network-generator*     ; \
     # rm -f /lib/systemd/system/systemd-pstore*                ; \
     # rm -f /lib/systemd/system/systemd-boot-update            ; \
-    rm -f /etc/systemd/system/dbus-org.freedesktop*          ; \
-    rm -f /etc/systemd/system/*.wants/*                      && \
+    # rm -f /lib/systemd/system/default.target                 ; \
   # update package tree
   pacman \
     --noconfirm --sync --refresh --sysupgrade && \
@@ -54,6 +55,6 @@ RUN \
       /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true && \
   /usr/bin/info.sh
 
-VOLUME ["/sys/fs/cgroup"]
+# VOLUME ["/sys/fs/cgroup"]
 
 ENTRYPOINT ["/usr/lib/systemd/systemd"]

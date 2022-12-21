@@ -78,6 +78,6 @@ RUN \
       /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true && \
   /usr/bin/info.sh
 
-VOLUME ["/sys/fs/cgroup"]
+# VOLUME ["/sys/fs/cgroup"]
 
 ENTRYPOINT  ["/sbin/openrc-init"]

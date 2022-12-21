@@ -47,6 +47,10 @@ jobs:
             version: "testing"
             platform: "linux/amd64"
 
+          - image: gentoo-systemd
+            version: "latest"
+            platform: "linux/amd64"
+
           - image: gentoo
             version: "latest"
             platform: "linux/amd64"
@@ -74,7 +78,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Inspec
         run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec -v 4.24.8

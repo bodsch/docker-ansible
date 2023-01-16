@@ -9,22 +9,23 @@ Provides docker containers use for testing ansible role on some operating system
 
 ## Images
 
-| Base operating system            | Github                          | Docker Hub                                  |
-| -------------------------------- | ------------------------------- | ------------------------------------------- |
-| [Ubuntu 20.04][Ubuntu]           | [ansible-ubuntu:20.04][]        | [bodsch/ansible-ubuntu:20.04][]        |
-| [Debian testing][Debian]         | [ansible-debian:testing][]      | [bodsch/ansible-debian:testing][]      |
-| [Debian 11][Debian]              | [ansible-debian:11][]           | [bodsch/ansible-debian:11][]           |
-| [Debian 10][Debian]              | [ansible-debian:10][]           | [bodsch/ansible-debian:10][]           |
-| [Oraclelinux 8][Oraclelinux]     | [ansible-oraclelinux:8][]       | [bodsch/ansible-oraclelinux:8][]       |
-| [Amazonlinux 2][Amazonlinux]     | [ansible-amazonlinux:2][]       | [bodsch/ansible-amazonlinux:2][]       |
-| [Amazonlinux 1][Amazonlinux]     | [ansible-amazonlinux:1][]       | [bodsch/ansible-amazonlinux:1][]       |
-| [Alpine][Alpine]                 | [ansible-alpine:latest][]       | [bodsch/ansible-alpine:latest][]       |
-| [Archlinux][Archlinux]           | [ansible-archlinux:latest][]    | [bodsch/ansible-archlinux:latest][]    |
-| [Artixlinux][Artixlinux]         | [ansible-artixlinux:latest][]   | [bodsch/ansible-artixlinux:latest][]    |
-| [Gentoo][Gentoo]                 | [ansible-gentoo:latest][]       | [bodsch/ansible-gentoo:latest][]       |
-| [Rockylinux 8.4-rc1][Rockylinux] | [ansible-rockylinux:8.4-rc1][]  | [bodsch/ansible-rockylinux:8.4-rc1][]  |
-| [Rockylinux 8][Rockylinux]       | [ansible-rockylinux:8][]        | [bodsch/ansible-rockylinux:8][]        |
-| [Almalinux 8][Almalinux]         | [ansible-Almalinux:8][]         | [bodsch/ansible-Almalinux:8][]         |
+| Base operating system            | init system | Github                            | Docker Hub                             |
+| :------------------------------- | :---------- | :------------------------------   | :------------------------------------- |
+| [Ubuntu 20.04][Ubuntu]           | systemd     | [ansible-ubuntu:20.04][]          | [bodsch/ansible-ubuntu:20.04][]        |
+| [Debian testing][Debian]         | systemd     | [ansible-debian:testing][]        | [bodsch/ansible-debian:testing][]      |
+| [Debian 11][Debian]              | systemd     | [ansible-debian:11][]             | [bodsch/ansible-debian:11][]           |
+| [Debian 10][Debian]              | systemd     | [ansible-debian:10][]             | [bodsch/ansible-debian:10][]           |
+| [Oraclelinux 8][Oraclelinux]     | systemd     | [ansible-oraclelinux:8][]         | [bodsch/ansible-oraclelinux:8][]       |
+| [Amazonlinux 2][Amazonlinux]     | systemd     | [ansible-amazonlinux:2][]         | [bodsch/ansible-amazonlinux:2][]       |
+| [Amazonlinux 1][Amazonlinux]     | systemd     | [ansible-amazonlinux:1][]         | [bodsch/ansible-amazonlinux:1][]       |
+| [Alpine][Alpine]                 |             | [ansible-alpine:latest][]         | [bodsch/ansible-alpine:latest][]       |
+| [Archlinux][Archlinux]           | systemd     | [ansible-archlinux:latest][]      | [bodsch/ansible-archlinux:latest][]    |
+| [Artixlinux][Artixlinux]         | openrc      | [ansible-artixlinux:latest][]     | [bodsch/ansible-artixlinux:latest][]    |
+| [Gentoo][Gentoo]                 | systemd     | [ansible-gentoo-systemd:latest][] | [bodsch/ansible-gentoo-systemd:latest][]       |
+| [Gentoo][Gentoo]                 | openrc      | [ansible-gentoo:latest][]         | [bodsch/ansible-gentoo:latest][]       |
+| [Rockylinux 8.4-rc1][Rockylinux] | systemd     | [ansible-rockylinux:8.4-rc1][]    | [bodsch/ansible-rockylinux:8.4-rc1][]  |
+| [Rockylinux 8][Rockylinux]       | systemd     | [ansible-rockylinux:8][]          | [bodsch/ansible-rockylinux:8][]        |
+| [Almalinux 8][Almalinux]         | systemd     | [ansible-Almalinux:8][]           | [bodsch/ansible-Almalinux:8][]         |
 
 [Ubuntu]: https://hub.docker.com/_/ubuntu/
 [Debian]: https://hub.docker.com/_/debian/

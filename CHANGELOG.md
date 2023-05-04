@@ -1,5 +1,11 @@
-#  (2021-10-26)
+#  (2023-05-04)
 
+# [5.0.0](https://github.com/bodsch/docker-ansible/compare/4.9.0...5.0.0) (2023-05-04)
+
+* **ubuntu** remove support for 20.04 (EOL)
+* **ubuntu** add ubuntu 22.10
+* **ubuntu** add ubuntu 23.04
+* **amazonlinux** remove support for amazonlinux 1
 
 
 # [4.9.0](https://github.com/diodonfrost/docker-ansible/compare/4.8.0...4.9.0) (2021-10-23)

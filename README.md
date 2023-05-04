@@ -1,6 +1,6 @@
 # docker-ansible
 
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build.yml?branch=mastaer)][ci]
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build.yml?branch=master)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/docker-ansible)][issues]
 
 [ci]: https://github.com/bodsch/docker-ansible/actions

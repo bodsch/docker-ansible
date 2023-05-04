@@ -6,6 +6,7 @@
 * **ubuntu** add ubuntu 22.10
 * **ubuntu** add ubuntu 23.04
 * **amazonlinux** remove support for amazonlinux 1
+* **amazonlinux** add support for amazonlinux 2023
 
 
 # [4.9.0](https://github.com/diodonfrost/docker-ansible/compare/4.8.0...4.9.0) (2021-10-23)

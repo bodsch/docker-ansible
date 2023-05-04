@@ -42,4 +42,4 @@ RUN \
     /root/.config 2> /dev/null && \
   /usr/bin/info.sh
 
-ENTRYPOINT ["/bin/systemd"]
+ENTRYPOINT ["/sbin/init"]

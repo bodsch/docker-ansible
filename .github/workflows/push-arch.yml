@@ -1,0 +1,73 @@
+name: Push - archlinux
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Build - archlinux"
+    branches:
+      - main
+    types:
+      - completed
+
+jobs:
+  push:
+    name: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        distribution:
+
+          - image: archlinux
+            version: "latest"
+            platform: "linux/amd64"
+
+          - image: artixlinux
+            version: "latest"
+            platform: "linux/amd64"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --no-cache \
+            --rm \
+            --file=${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }} \
+            --tag=bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
+            ${{ matrix.distribution.image }}-ansible
+
+      - name: Push Docker image to Github Docker registry
+        run: |
+          # Login on Github Docker registry before pushing
+          echo "${{ secrets.GH_DOCKER_REGISTRY_TOKEN }}" | docker login docker.pkg.github.com -u bodsch --password-stdin
+
+          # Pushing image to Github Docker registry
+          docker tag \
+            bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
+            docker.pkg.github.com/bodsch/docker-ansible/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }}
+          docker push \
+            docker.pkg.github.com/bodsch/docker-ansible/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }}
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          # Login on dockerhub.io before pushing
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+          # Pushing image to dockerhub
+          docker buildx build \
+            --push \
+            --platform ${{ matrix.distribution.platform }} \
+            --file=${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }} \
+            --tag=bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
+            ${{ matrix.distribution.image }}-ansible

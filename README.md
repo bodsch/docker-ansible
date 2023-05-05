@@ -14,31 +14,31 @@ Provides docker containers use for testing ansible role on some operating system
 
 | Base operating system            | Version | build state            | init system | Github Registry                   | Docker Hub                               |
 | :------------------------------- | :-----  | :-----                 | :---------- | :------------------------------   | :-------------------------------------   |
-| Arch / Artix                     |         | [arch_build_state][]   |             |                                   |                                          |
+| Arch / Artix                     |         | ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build-arch.yml)   |             |                                   |                                          |
 | [Archlinux][Archlinux]           | latest  |                        | systemd     | [ansible-archlinux:latest][]      | [bodsch/ansible-archlinux:latest][]      |
 | [Artixlinux][Artixlinux]         | latest  |                        | openrc      | [ansible-artixlinux:latest][]     | [bodsch/ansible-artixlinux:latest][]     |
-| [Debian][Debian]                 |         | [debian_build_state][] |             |                                   |                                          |
+| [Debian][Debian]                 |         | ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build-debian.yml) |             |                                   |                                          |
 | [Debian 10][Debian]              | 10      |                        | systemd     | [ansible-debian:10][]             | [bodsch/ansible-debian:10][]             |
 | [Debian 11][Debian]              | 11      |                        | systemd     | [ansible-debian:11][]             | [bodsch/ansible-debian:11][]             |
 | [Debian testing][Debian]         | testing |                        | systemd     | [ansible-debian:testing][]        | [bodsch/ansible-debian:testing][]        |
-| [Ubuntu][Ubuntu]                 |         | [ubuntu_build_state][] |             |                                   |                                          |
+| [Ubuntu][Ubuntu]                 |         | ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build-ubuntu.yml) |             |                                   |                                          |
 |                                  | 22.04   |                        | systemd     | [ansible-ubuntu:20.04][]          | [bodsch/ansible-ubuntu:20.04][]          |
 |                                  | 22.10   |                        | systemd     | [ansible-ubuntu:22.10][]          | [bodsch/ansible-ubuntu:22.10][]          |
 |                                  | 23.04   |                        | systemd     | [ansible-ubuntu:23.04][]          | [bodsch/ansible-ubuntu:23.04][]          |
-| [Gentoo][Gentoo]                 |         | [gentoo_build_state][] |             |                                   |                                          |
+| [Gentoo][Gentoo]                 |         | ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build-gentoo.yml) |             |                                   |                                          |
 |                                  | latest  |                        | openrc      | [ansible-gentoo:latest][]         | [bodsch/ansible-gentoo:latest][]         |
 |                                  | latest  |                        | systemd     | [ansible-gentoo-systemd:latest][] | [bodsch/ansible-gentoo-systemd:latest][] |
-| [Oraclelinux][Oraclelinux]       |         | [oracle_build_state][] |             |                                   |                                          |
+| [Oraclelinux][Oraclelinux]       |         | ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build-oraclelinux.yml) |             |                                   |                                          |
 |                                  | 8       |                        | systemd     | [ansible-oraclelinux:8][]         | [bodsch/ansible-oraclelinux:8][]         |
 |                                  | 9       |                        | systemd     | [ansible-oraclelinux:9][]         | [bodsch/ansible-oraclelinux:9][]         |
-| [Rockylinux][Rockylinux]         |         | [rocky_build_state][]  |             |                                   |                                          |
+| [Rockylinux][Rockylinux]         |         | ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build-rockylinux.yml)  |             |                                   |                                          |
 |                                  | 8       |                        | systemd     | [ansible-rockylinux:8][]          | [bodsch/ansible-rockylinux:8][]          |
 |                                  | 9       |                        | systemd     | [ansible-rockylinux:9][]          | [bodsch/ansible-rockylinux:9][]          |
-| [Almalinux][Almalinux]           |         | [alma_build_state][]   |             |                                   |                                          |
+| [Almalinux][Almalinux]           |         | ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build-almalinux.yml)   |             |                                   |                                          |
 |                                  | 8       |                        | systemd     | [ansible-Almalinux:8][]           | [bodsch/ansible-Almalinux:8][]           |
 |                                  | 9       |                        | systemd     | [ansible-Almalinux:9][]           | [bodsch/ansible-Almalinux:9][]           |
-| [Alpine][Alpine]                 | latest  | [misc_build_state][]   |             | [ansible-alpine:latest][]         | [bodsch/ansible-alpine:latest][]         |
-| [Amazonlinux][Amazonlinux]       | 2       | [misc_build_state][]   | systemd     | [ansible-amazonlinux:2][]         | [bodsch/ansible-amazonlinux:2][]         |
+| [Alpine][Alpine]                 | latest  | ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build-misc.yml)   |             | [ansible-alpine:latest][]         | [bodsch/ansible-alpine:latest][]         |
+| [Amazonlinux][Amazonlinux]       | 2       | ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build-misc.yml)   | systemd     | [ansible-amazonlinux:2][]         | [bodsch/ansible-amazonlinux:2][]         |
 
 [Ubuntu]: https://hub.docker.com/_/ubuntu/
 [Debian]: https://hub.docker.com/_/debian/
@@ -50,15 +50,6 @@ Provides docker containers use for testing ansible role on some operating system
 [Gentoo]: https://hub.docker.com/r/gentoo/stage3-amd64/
 [Rockylinux]: https://hub.docker.com/r/rockylinux/rockylinux
 [Almalinux]: https://hub.docker.com/_/almalinux
-
-[arch_build_state]: https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build_arch.yml?branch=master
-[debian_build_state]: https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build_debian.yml?branch=master
-[ubuntu_build_state]: https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build_ubuntu.yml?branch=master
-[gentoo_build_state]: https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build_gentoo.yml?branch=master
-[oracle_build_state]: https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build_oraclelinux.yml?branch=master
-[rocky_build_state]: https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build_rockylinux.yml?branch=master
-[alma_build_state]: https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build_almalinux.yml?branch=master
-[misc_build_state]: https://img.shields.io/github/actions/workflow/status/bodsch/docker-ansible/build_misc.yml?branch=master
 
 [ansible-archlinux:latest]: https://github.com/bodsch/docker-ansible/pkgs/container/docker-ansible%2Fansible-archlinux
 [ansible-artixlinux:latest]: https://github.com/bodsch/docker-ansible/pkgs/container/docker-ansible%2Fansible-artixlinux

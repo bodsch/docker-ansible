@@ -37,7 +37,6 @@ RUN \
       ansible \
       git \
       python-setuptools \
-      python-pip \
       sudo \
       openssh \
       gawk \

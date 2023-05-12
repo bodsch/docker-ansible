@@ -9,9 +9,7 @@ RUN \
   apt-get install --assume-yes --no-install-recommends \
     python3-apt \
     python3-setuptools \
-    python3-pip \
     git \
-    python3-pip \
     gnupg2 \
     dirmngr \
     apt-transport-https \

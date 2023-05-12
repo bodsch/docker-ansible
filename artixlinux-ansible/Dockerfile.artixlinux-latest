@@ -58,7 +58,6 @@ RUN \
       syslog-ng \
       syslog-ng-openrc \
       python-setuptools \
-      python-pip \
       sudo \
       unzip \
       tar && \

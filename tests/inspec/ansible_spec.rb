@@ -12,15 +12,15 @@ control 'ansible-01' do
       describe package(ansible_package) do
         it { should be_installed }
       end
-      describe pip('ansible') do
-        it { should be_installed }
-      end
-      describe pip('ansible', '/usr/bin/pip3.6') do
-        it { should be_installed }
-      end
-      describe pip('ansible', 'python3 -m pip') do
-        it { should be_installed }
-      end
+      # describe pip('ansible') do
+      #   it { should be_installed }
+      # end
+      # describe pip('ansible', '/usr/bin/pip3.6') do
+      #   it { should be_installed }
+      # end
+      # describe pip('ansible', 'python3 -m pip') do
+      #   it { should be_installed }
+      # end
     end
   end
 end

@@ -1,0 +1,43 @@
+FROM debian:bookworm
+LABEL maintainer="bodsch <bodo@boone-schulz.de>"
+
+COPY rootfs/ /
+
+RUN \
+  apt-get update  --assume-yes && \
+  apt-get upgrade --assume-yes && \
+  apt-get install --assume-yes --no-install-recommends \
+    python3-apt \
+    python3-setuptools \
+    software-properties-common \
+    git \
+    ansible \
+    gnupg2 \
+    dirmngr \
+    apt-transport-https \
+    curl \
+    init \
+    openssh-server \
+    openssh-client \
+    systemd \
+    unzip \
+    rsync \
+    sudo \
+    fuse && \
+  ln --symbolic \
+    /usr/bin/python3 /usr/bin/python && \
+  mkdir -p /etc/ansible && \
+  echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts && \
+  apt autoremove \
+    --assume-yes && \
+  apt-get clean && \
+  rm --recursive --force \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/cache/debconf/* \
+    /usr/share/doc/* \
+    /root/.cache \
+    /root/.config 2> /dev/null && \
+  /usr/bin/info.sh
+
+ENTRYPOINT ["/sbin/init"]

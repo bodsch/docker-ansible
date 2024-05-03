@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 python_version() {
-  local version=$(python --version | cut -d ' ' -f2)
+  local version=$(python3 --version | cut -d ' ' -f2)
   echo "${version}"
 }
 

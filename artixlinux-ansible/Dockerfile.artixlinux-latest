@@ -1,6 +1,5 @@
 
 FROM artixlinux/artixlinux:base-openrc
-# FROM artixlinux/base:latest
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
 COPY rootfs/ /
@@ -8,38 +7,17 @@ COPY rootfs/ /
 RUN \
   # update package tree
   pacman \
+    --sync \
+    --refresh && \
+  pacman \
     --noconfirm \
     --sync \
-    --refresh \
+    --sysupgrade \
+    --download && \
+  pacman \
+    --noconfirm \
+    --sync \
     --sysupgrade
-
-# RUN \
-#   sed -i \
-#     -e 's|SigLevel    = Required DatabaseOptionals|SigLevel    = Optional TrustAll|' /etc/pacman.conf
-
-# RUN \
-#   pacman \
-#     --noconfirm \
-#     --sync \
-#       archlinux-keyring && \
-#   # fix this: WARNING: server 'gpg-agent' is older than us ...
-#   gpgconf \
-#     --kill all && \
-#   pacman-key \
-#     --init && \
-#   # import new artix keyring and keyring for archlinux
-#   pacman \
-#     --noconfirm \
-#     --sync \
-#       archlinux-keyring \
-#       artix-keyring && \
-#   # fix this: WARNING: server 'gpg-agent' is older than us ...
-#   gpgconf \
-#     --kill all && \
-#   pacman-key \
-#     --populate \
-#       archlinux \
-#       artix
 
 RUN \
   # install openrc as init system
@@ -57,6 +35,7 @@ RUN \
       ansible \
       base \
       procps \
+      pacman-contrib \
       git \
       syslog-ng \
       syslog-ng-openrc \
@@ -70,6 +49,9 @@ RUN \
   mkdir -p /etc/ansible && \
   echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
   # cleanup
+  paccache \
+    --remove \
+    --keep 0 && \
   pacman \
     --noconfirm \
     --sync \

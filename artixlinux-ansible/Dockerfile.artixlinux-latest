@@ -1,4 +1,3 @@
-
 FROM artixlinux/artixlinux:base-openrc
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
@@ -18,6 +17,34 @@ RUN \
     --noconfirm \
     --sync \
     --sysupgrade
+
+# RUN \
+#   sed -i \
+#     -e 's|SigLevel    = Required DatabaseOptionals|SigLevel    = Optional TrustAll|' /etc/pacman.conf
+
+RUN \
+  pacman \
+    --noconfirm \
+    --sync \
+      archlinux-keyring && \
+  # fix this: WARNING: server 'gpg-agent' is older than us ...
+  gpgconf \
+    --kill all && \
+  pacman-key \
+    --init && \
+  # import new artix keyring and keyring for archlinux
+  pacman \
+    --noconfirm \
+    --sync \
+      archlinux-keyring \
+      artix-keyring && \
+  # fix this: WARNING: server 'gpg-agent' is older than us ...
+  gpgconf \
+    --kill all && \
+  pacman-key \
+    --populate \
+      archlinux \
+      artix
 
 RUN \
   # install openrc as init system

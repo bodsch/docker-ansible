@@ -4,36 +4,53 @@ LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 COPY rootfs/ /
 
 RUN \
-  pacman \
-    --noconfirm --sync --refresh --sysupgrade \
-      systemd \
-      procps && \
-  (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-    rm -vf /lib/systemd/system/multi-user.target.wants/*      ; \
-    rm -vf /lib/systemd/system/local-fs.target.wants/*        ; \
-    rm -vf /lib/systemd/system/sockets.target.wants/*udev*    ; \
-    rm -vf /lib/systemd/system/sockets.target.wants/*initctl* ; \
-    rm -vf /lib/systemd/system/basic.target.wants/*           ; \
-    rm -vf /lib/systemd/system/anaconda.target.wants/*        ; \
-    rm -vf /lib/systemd/system/systemd-timesyncd*             ; \
-    rm -vf /lib/systemd/system/systemd-resolved*              ; \
-    rm -vf /lib/systemd/system/systemd-networkd*              ; \
-    rm -vf /lib/systemd/system/systemd-homed*                 ; \
-    rm -vf /lib/systemd/system/systemd-userdbd*               ; \
-    rm -vf /lib/systemd/system/remote-cryptsetup*             ; \
-    rm -vrf /lib/systemd/system/remote-fs*                    ; \
-    rm -vf /etc/systemd/system/dbus-org.freedesktop*          ; \
-    rm -vf /etc/systemd/system/*.wants/*                      && \
-    #
-    # rm -f /lib/systemd/system/systemd-network-generator*     ; \
-    # rm -f /lib/systemd/system/systemd-pstore*                ; \
-    # rm -f /lib/systemd/system/systemd-boot-update            ; \
-    # rm -f /lib/systemd/system/default.target                 ; \
   # update package tree
   pacman \
-    --noconfirm --sync --refresh --sysupgrade && \
+    --sync \
+    --refresh && \
   pacman \
-    --noconfirm --sync --refresh \
+    --noconfirm \
+    --sync \
+    --sysupgrade \
+    --download && \
+  pacman \
+    --noconfirm \
+    --sync \
+    --sysupgrade
+
+RUN \
+  pacman \
+    --noconfirm \
+    --sync \
+      archlinux-keyring && \
+  # fix this: WARNING: server 'gpg-agent' is older than us ...
+  gpgconf \
+    --kill all && \
+  pacman-key \
+    --init && \
+  # import new artix keyring and keyring for archlinux
+  pacman \
+    --noconfirm \
+    --sync \
+      archlinux-keyring && \
+  # fix this: WARNING: server 'gpg-agent' is older than us ...
+  gpgconf \
+    --kill all && \
+  pacman-key \
+    --populate \
+      archlinux
+
+RUN \
+  pacman \
+    --noconfirm \
+    --sync \
+      dbus-broker-units \
+      systemd \
+      procps \
+      pacman-contrib && \
+  pacman \
+    --noconfirm \
+    --sync \
       ansible \
       git \
       python-setuptools \
@@ -44,10 +61,34 @@ RUN \
       tar \
       rsync \
       fuse && \
+  [ -d /etc/ansible ] || mkdir /etc/ansible && \
   echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
+  (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+    rm -vf /lib/systemd/system/multi-user.target.wants/*      ; \
+    rm -vf /lib/systemd/system/local-fs.target.wants/*        ; \
+    rm -vf /lib/systemd/system/sockets.target.wants/*udev*    ; \
+    rm -vf /lib/systemd/system/sockets.target.wants/*initctl* ; \
+    rm -vf /lib/systemd/system/basic.target.wants/*           ; \
+    rm -vf /lib/systemd/system/anaconda.target.wants/*        ; \
+    rm -vf /lib/systemd/system/systemd-nsresourced*           ; \
+    rm -vf /lib/systemd/system/systemd-timesyncd*             ; \
+    rm -vf /lib/systemd/system/systemd-resolved*              ; \
+    rm -vf /lib/systemd/system/systemd-networkd*              ; \
+    rm -vf /lib/systemd/system/systemd-homed*                 ; \
+    rm -vf /lib/systemd/system/systemd-userdbd*               ; \
+    rm -vf /lib/systemd/system/remote-cryptsetup*             ; \
+    rm -vrf /lib/systemd/system/remote-fs*                    ; \
+    rm -vf /etc/systemd/system/dbus-org.freedesktop*          ; \
+    rm -vf /etc/systemd/system/*.wants/*                      && \
+  systemctl set-default multi-user.target && \
   # cleanup
+  paccache \
+    --remove \
+    --keep 0 && \
   pacman \
-    --noconfirm --sync -cc && \
+    --noconfirm \
+    --sync \
+    -cc && \
   rm -rf \
     /tmp/* \
     /usr/bin/find \
@@ -57,3 +98,4 @@ RUN \
 # VOLUME ["/sys/fs/cgroup"]
 
 ENTRYPOINT ["/usr/lib/systemd/systemd"]
+

@@ -22,7 +22,8 @@ on:
     paths:
       - "!Makefile"
       - "!README.md"
-      - "*-ansible/**"
+      - "gentoo-ansible/**"
+      - "gentoo-systemd-ansible/**"
   pull_request:
     branches:
       - 'master'
@@ -31,7 +32,8 @@ on:
     paths:
       - "!Makefile"
       - "!README.md"
-      - "*-ansible/**"
+      - "gentoo-ansible/**"
+      - "gentoo-systemd-ansible/**"
 
 jobs:
   build:

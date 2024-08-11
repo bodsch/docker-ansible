@@ -22,7 +22,7 @@ on:
     paths:
       - "!Makefile"
       - "!README.md"
-      - "*-ansible/**"
+      - "almalinux-ansible/**"
   pull_request:
     branches:
       - 'master'
@@ -31,7 +31,7 @@ on:
     paths:
       - "!Makefile"
       - "!README.md"
-      - "*-ansible/**"
+      - "almalinux-ansible/**"
 
 jobs:
   build:

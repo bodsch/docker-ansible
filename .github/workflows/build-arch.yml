@@ -24,7 +24,7 @@ on:
     paths:
       - "!Makefile"
       - "!README.md"
-      - "*-ansible/**"
+      - "archlinux-ansible/**"
   pull_request:
     branches:
       - 'master'
@@ -33,11 +33,11 @@ on:
     paths:
       - "!Makefile"
       - "!README.md"
-      - "*-ansible/**"
+      - "archlinux-ansible/**"
 
 jobs:
   build:
-    name: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
+    name: build: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -93,7 +93,7 @@ jobs:
       #       ${{ matrix.distribution.image }}-ansible
 
   push:
-    name: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
+    name: push: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
     runs-on: ubuntu-22.04
     needs:
       - build
@@ -120,14 +120,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # - name: Build Docker image
-      #   run: |
-      #     docker build \
-      #       --no-cache \
-      #       --rm \
-      #       --file=${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }} \
-      #       --tag=bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
-      #       ${{ matrix.distribution.image }}-ansible
+      - name: Build Docker image
+        run: |
+          docker build \
+            --no-cache \
+            --rm \
+            --file=${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }} \
+            --tag=bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
+            ${{ matrix.distribution.image }}-ansible
 
       - name: Push Docker image to Github Docker registry
         run: |

@@ -2,8 +2,11 @@
 
 set -x
 
+pushd ${DISTRIBUTION}-ansible
+
 docker build \
-  --rm \
-  --file=${DISTRIBUTION}-ansible/Dockerfile.${DISTRIBUTION}-${DISTRIBUTION_VERSION} \
+  --file=Dockerfile.${DISTRIBUTION}-${DISTRIBUTION_VERSION} \
   --tag=${DOCKER_NAME_SPACE}/ansible-${DISTRIBUTION}:${DISTRIBUTION_VERSION} \
-  ${DISTRIBUTION}-ansible
+  .
+
+popd

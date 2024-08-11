@@ -37,7 +37,7 @@ on:
 
 jobs:
   build:
-    name: build: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
+    name: "build: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}"
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -93,7 +93,7 @@ jobs:
       #       ${{ matrix.distribution.image }}-ansible
 
   push:
-    name: push: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
+    name: "push: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}"
     runs-on: ubuntu-22.04
     needs:
       - build

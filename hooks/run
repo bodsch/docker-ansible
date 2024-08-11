@@ -13,4 +13,5 @@ docker run \
   ${PORTS} \
   ${VOLUMES} \
   ${ENV} \
-  --tag=${DOCKER_NAME_SPACE}/ansible-${DISTRIBUTION}:${DISTRIBUTION_VERSION}
+  ${DOCKER_NAME_SPACE}/ansible-${DISTRIBUTION}:${DISTRIBUTION_VERSION} \
+  bash

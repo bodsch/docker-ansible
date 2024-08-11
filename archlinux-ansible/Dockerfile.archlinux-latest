@@ -77,8 +77,9 @@ RUN \
     rm -vf /lib/systemd/system/systemd-homed*                 ; \
     rm -vf /lib/systemd/system/systemd-userdbd*               ; \
     rm -vf /lib/systemd/system/remote-cryptsetup*             ; \
-    rm -vrf /lib/systemd/system/remote-fs*                    ; \
     rm -vf /etc/systemd/system/dbus-org.freedesktop*          ; \
+    rm -vf /etc/systemd/system/getty.target.wants/*           ; \
+    rm -vrf /lib/systemd/system/remote-fs*                    ; \
     rm -vf /etc/systemd/system/*.wants/*                      && \
   systemctl set-default multi-user.target && \
   # cleanup

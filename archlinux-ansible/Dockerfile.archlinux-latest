@@ -82,6 +82,7 @@ RUN \
     rm -vrf /lib/systemd/system/remote-fs*                    ; \
     rm -vf /etc/systemd/system/*.wants/*                      && \
   systemctl set-default multi-user.target && \
+  systemctl disable getty@tty1.service && \
   # cleanup
   paccache \
     --remove \

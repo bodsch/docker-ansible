@@ -24,6 +24,8 @@ RUN \
     rsync \
     sudo \
     fuse && \
+  systemctl set-default multi-user.target && \
+  systemctl disable getty@tty1.service && \
   ln --symbolic \
     /usr/bin/python3 /usr/bin/python && \
   mkdir -p /etc/ansible && \

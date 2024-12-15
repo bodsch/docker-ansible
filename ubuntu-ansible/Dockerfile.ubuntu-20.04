@@ -34,6 +34,8 @@ RUN \
   ln \
     -s /bin/true /sbin/udevadm && \
   echo -e "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts && \
+  systemctl set-default multi-user.target && \
+  systemctl disable getty@tty1.service && \
   apt purge \
     fuse \
     snapd \

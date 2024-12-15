@@ -48,9 +48,9 @@ jobs:
           - image: ubuntu
             version: "22.04"
             platform: "linux/amd64,linux/arm64/v8"
-          - image: ubuntu
-            version: "23.04"
-            platform: "linux/amd64,linux/arm64/v8"
+          #- image: ubuntu
+          #  version: "23.04"
+          #  platform: "linux/amd64,linux/arm64/v8"
           - image: ubuntu
             version: "24.04"
             platform: "linux/amd64,linux/arm64/v8"

@@ -1,0 +1,46 @@
+FROM debian:trixie
+LABEL maintainer="bodsch <bodo@boone-schulz.de>"
+
+COPY rootfs/ /
+
+RUN \
+  apt-get update  --assume-yes && \
+  apt-get upgrade --assume-yes && \
+  apt-get install --assume-yes --no-install-recommends \
+    python3-apt \
+    python3-setuptools \
+    git \
+    ansible \
+    gnupg2 \
+    dirmngr \
+    apt-transport-https \
+    curl \
+    init \
+    openssh-server \
+    openssh-client \
+    systemd \
+    unzip \
+    rsync \
+    sudo \
+    fuse && \
+  systemctl set-default multi-user.target && \
+  systemctl disable getty@tty1.service && \
+  ln --symbolic \
+    /usr/bin/python3 /usr/bin/python && \
+  mkdir -p /etc/ansible && \
+  echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts && \
+  systemctl set-default multi-user.target && \
+  systemctl disable getty@tty1.service && \
+  apt autoremove \
+    --assume-yes && \
+  apt-get clean && \
+  rm --recursive --force \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/cache/debconf/* \
+    /usr/share/doc/* \
+    /root/.cache \
+    /root/.config 2> /dev/null && \
+  /usr/bin/info.sh
+
+ENTRYPOINT ["/sbin/init"]

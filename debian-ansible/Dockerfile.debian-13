@@ -1,6 +1,8 @@
 FROM debian:trixie
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 COPY rootfs/ /
 
 RUN \
@@ -21,10 +23,7 @@ RUN \
     systemd \
     unzip \
     rsync \
-    sudo \
-    fuse && \
-  systemctl set-default multi-user.target && \
-  systemctl disable getty@tty1.service && \
+    sudo && \
   ln --symbolic \
     /usr/bin/python3 /usr/bin/python && \
   mkdir -p /etc/ansible && \

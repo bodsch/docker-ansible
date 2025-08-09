@@ -1,6 +1,8 @@
 FROM debian:bookworm
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 COPY rootfs/ /
 
 RUN \
@@ -24,8 +26,6 @@ RUN \
     rsync \
     sudo \
     fuse && \
-  systemctl set-default multi-user.target && \
-  systemctl disable getty@tty1.service && \
   ln --symbolic \
     /usr/bin/python3 /usr/bin/python && \
   mkdir -p /etc/ansible && \

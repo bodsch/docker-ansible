@@ -1,6 +1,8 @@
 FROM debian:testing
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 COPY rootfs/ /
 
 RUN \
@@ -26,6 +28,8 @@ RUN \
     /usr/bin/python3 /usr/bin/python && \
   mkdir -p /etc/ansible && \
   echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts && \
+  systemctl set-default multi-user.target && \
+  systemctl disable getty@tty1.service && \
   apt autoremove \
     --assume-yes && \
   apt-get clean && \

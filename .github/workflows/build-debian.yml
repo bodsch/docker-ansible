@@ -49,10 +49,10 @@ jobs:
           #   platform: "linux/amd64,linux/arm64/v8"
           - image: debian
             version: "12"
-            platform: "linux/amd64,linux/arm64/v8"
+            platform: "linux/amd64"
           - image: debian
             version: "13"
-            platform: "linux/amd64,linux/arm64/v8"
+            platform: "linux/amd64"
           - image: debian
             version: "testing"
             platform: "linux/amd64"

@@ -1,5 +1,5 @@
 ---
-name: Debian Ansible Image (build, test, publish)
+name: Ubuntu Ansible Image (build, test, publish)
 
 on:
   push:

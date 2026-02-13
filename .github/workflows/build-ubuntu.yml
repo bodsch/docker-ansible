@@ -1,6 +1,6 @@
 ---
 
-name: Ubuntu Ansible Image (build, test, publish)
+name: Ubuntu Ansible Image (build, publish)
 
 on:
   push:
@@ -56,10 +56,13 @@ jobs:
         distribution:
           - image: ubuntu
             version: "20.04"
+            platform: linux/amd64
           - image: ubuntu
             version: "22.04"
+            platform: linux/amd64
           - image: ubuntu
             version: "24.04"
+            platform: linux/amd64
 
     steps:
       - name: Checkout
@@ -73,7 +76,7 @@ jobs:
         with:
           context: ubuntu-ansible
           file: ubuntu-ansible/Dockerfile.ubuntu-${{ matrix.distribution.version }}
-          platforms: linux/amd64
+          platforms: ${{ matrix.distribution.platform }}
           load: true
           tags: ansible-ubuntu:${{ matrix.distribution.version }}
           pull: true
@@ -81,46 +84,6 @@ jobs:
           no-cache: ${{ github.event_name == 'schedule' }}
           cache-from: type=gha,scope=${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
           cache-to: type=gha,mode=max,scope=${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
-
-      # - name: Install InSpec
-      #   run: |
-      #     set -euo pipefail
-      #     curl -sSL https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec -v "${INSPEC_VERSION}"
-      #     inspec --version
-      #
-      # - name: Start test container
-      #   run: |
-      #     set -euo pipefail
-      #     name="ansible-ubuntu-${{ matrix.distribution.version }}"
-      #     image="${{ env.LOCAL_IMAGE }}:${{ matrix.distribution.version }}"
-      #
-      #     docker rm -f "${name}" >/dev/null 2>&1 || true
-      #
-      #     docker run -d \
-      #       --name "${name}" \
-      #       --hostname "${name}" \
-      #       --privileged \
-      #       --env container=docker \
-      #       --volume /sys/fs/cgroup:/sys/fs/cgroup:rw \
-      #       --cgroupns=host \
-      #       "${image}"
-      #
-      # - name: Run InSpec tests
-      #   run: |
-      #     set -euo pipefail
-      #     name="ansible-ubuntu-${{ matrix.distribution.version }}"
-      #     image="${{ env.LOCAL_IMAGE }}:${{ matrix.distribution.version }}"
-      #
-      #     inspec exec tests/inspec/ \
-      #       --input image="${image}" container_name="${name}" \
-      #       --chef-license accept-silent \
-      #       --reporter cli
-      #
-      # - name: Cleanup
-      #   if: always()
-      #   run: |
-      #     set -euo pipefail
-      #     docker rm -f "ansible-ubuntu-${{ matrix.distribution.version }}" >/dev/null 2>&1 || true
 
   publish:
     name: Publish (${{ matrix.distribution.version }})

@@ -1,6 +1,6 @@
 ---
 
-name: ArchLinux Ansible Image (build, publish)
+name: ArtixLinux Ansible Image (build, publish)
 
 on:
   push:
@@ -8,9 +8,9 @@ on:
       - master
       - "feature/**"
     paths:
-      - "archlinux-ansible/**"
+      - "artixlinux-ansible/**"
       - "tests/**"
-      - ".github/workflows/build-arch.yml"
+      - ".github/workflows/build-artix.yml"
       - "!README.md"
       - "!Makefile"
   pull_request:
@@ -18,9 +18,9 @@ on:
       - master
       - "feature/**"
     paths:
-      - "archlinux-ansible/**"
+      - "artixlinux-ansible/**"
       - "tests/**"
-      - ".github/workflows/build-arch.yml"
+      - ".github/workflows/build-artix.yml"
       - "!README.md"
       - "!Makefile"
   schedule:
@@ -29,7 +29,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: archlinux-ansible-${{ github.ref }}
+  group: artixlinux-ansible-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -37,11 +37,11 @@ permissions:
 
 env:
   # Ziel-Images
-  IMAGE_DOCKERHUB: bodsch/ansible-archlinux
-  IMAGE_GHCR: ghcr.io/bodsch/docker-ansible/ansible-archlinux
+  IMAGE_DOCKERHUB: bodsch/ansible-artixlinux
+  IMAGE_GHCR: ghcr.io/bodsch/docker-ansible/ansible-artixlinux
 
   # Lokales Test-Image
-  LOCAL_IMAGE: ansible-archlinux
+  LOCAL_IMAGE: ansible-artixlinux
 
   # Inspec
   INSPEC_VERSION: "5.21.29"
@@ -55,7 +55,7 @@ jobs:
       fail-fast: false
       matrix:
         distribution:
-          - image: archlinux
+          - image: artixlinux
             version: "latest"
             platform: "linux/amd64"
 
@@ -95,7 +95,7 @@ jobs:
       fail-fast: false
       matrix:
         distribution:
-          - image: archlinux
+          - image: artixlinux
             version: "latest"
             platform: "linux/amd64"
 

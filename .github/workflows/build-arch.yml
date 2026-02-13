@@ -49,7 +49,7 @@ env:
 
 jobs:
   build_test:
-    name: Build & Test (${{ matrix.distribution.version }})
+    name: Build & Test (${{ matrix.distribution.image }} ${{ matrix.distribution.version }})
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -85,7 +85,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
 
   publish:
-    name: Publish (${{ matrix.distribution.version }})
+    name: Publish (${{ matrix.distribution.image }} ${{ matrix.distribution.version }})
     needs: build_test
     runs-on: ubuntu-24.04
     if: |

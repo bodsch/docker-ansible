@@ -98,7 +98,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-      matrix:
         distribution:
           - image: archlinux
             version: "latest"

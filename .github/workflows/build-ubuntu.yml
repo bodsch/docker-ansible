@@ -1,4 +1,5 @@
 ---
+
 name: Ubuntu Ansible Image (build, test, publish)
 
 on:

@@ -137,13 +137,13 @@ jobs:
       matrix:
         distribution:
           - image: ubuntu
-            version: "12"
+            version: "20.04"
             platform: linux/amd64
           - image: ubuntu
-            version: "13"
+            version: "22.04"
             platform: linux/amd64
           - image: ubuntu
-            version: "testing"
+            version: "24.04"
             platform: linux/amd64
 
     steps:

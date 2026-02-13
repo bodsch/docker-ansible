@@ -1,44 +1,56 @@
 ---
 
-name: Build - archlinux
+name: Arch Ansible Image (build, test, publish)
 
 on:
-  schedule:
-    - cron: '10 18 * * sun'
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-          - info
-          - warning
-          - debug
   push:
     branches:
-      - 'master'
-      - 'feature/**'
-      - '!doc/**'
+      - master
+      - "feature/**"
     paths:
-      - "!Makefile"
-      - "!README.md"
       - "archlinux-ansible/**"
+      - "tests/**"
+      - ".github/workflows/build-arch.yml"
+      - "!README.md"
+      - "!Makefile"
   pull_request:
     branches:
-      - 'master'
-      - 'feature/**'
-      - '!doc/**'
+      - master
+      - "feature/**"
     paths:
-      - "!Makefile"
-      - "!README.md"
       - "archlinux-ansible/**"
+      - "tests/**"
+      - ".github/workflows/build-arch.yml"
+      - "!README.md"
+      - "!Makefile"
+  schedule:
+    # GitHub cron ist UTC
+    - cron: "5 20 * * 0"
+  workflow_dispatch:
+
+concurrency:
+  group: archlinux-ansible-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Ziel-Images
+  IMAGE_DOCKERHUB: bodsch/ansible-archlinux
+  IMAGE_GHCR: ghcr.io/bodsch/docker-ansible/ansible-archlinux
+
+  # Lokales Test-Image
+  LOCAL_IMAGE: ansible-archlinux
+
+  # Inspec
+  INSPEC_VERSION: "5.21.29"
+
 
 jobs:
-  build:
-    name: "build: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}"
-    runs-on: ubuntu-22.04
+  build_test:
+    name: Build & Test (${{ matrix.distribution.version }})
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -52,104 +64,98 @@ jobs:
             platform: "linux/amd64"
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
+      - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker images
-        run: |
-          docker build \
-            --file=${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }} \
-            --tag=bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
-            ${{ matrix.distribution.image }}-ansible
+      - name: Build (load for tests)
+        uses: docker/build-push-action@v6
+        with:
+          context: archlinux-ansible
+          file: archlinux-ansible/Dockerfile.archlinux-${{ matrix.distribution.version }}
+          platforms: ${{ matrix.distribution.platform }}
+          load: true
+          tags: ansible-archlinux:${{ matrix.distribution.version }}
+          pull: true
+          # Rebuild ohne Cache nur beim Scheduled Run (typisch für Security Updates)
+          no-cache: ${{ github.event_name == 'schedule' }}
+          cache-from: type=gha,scope=${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
 
-      - name: Install Inspec
-        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec -v 5.21.29
+  publish:
+    name: Publish (${{ matrix.distribution.version }})
+    needs: build_test
+    runs-on: ubuntu-24.04
+    if: |
+      github.ref == 'refs/heads/master' &&
+      (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    permissions:
+      contents: read
+      packages: write
 
-      - name: Test Docker images
-        run: |
-          container_id=$(mktemp)
-          sudo docker run \
-            --detach \
-            --privileged \
-            --cgroupns=host \
-            -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
-            -v /var/lib/containerd \
-            bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} > "${container_id}"
+    strategy:
+      fail-fast: false
+      matrix:
+      matrix:
+        distribution:
+          - image: archlinux
+            version: "latest"
+            platform: "linux/amd64"
 
-          inspec exec tests/inspec --chef-license accept-silent -t docker://$(cat ${container_id})
+          - image: artixlinux
+            version: "latest"
+            platform: "linux/amd64"
 
-      # - name: Build Docker images on all platforms
-      #   run: |
-      #     docker buildx build \
-      #       --platform ${{ matrix.distribution.platform }} \
-      #       --file=${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }} \
-      #       --tag=bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
-      #       ${{ matrix.distribution.image }}-ansible
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
 
-  # push:
-  #   name: "push: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}"
-  #   runs-on: ubuntu-22.04
-  #   needs:
-  #     - build
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       distribution:
-  #
-  #         - image: archlinux
-  #           version: "latest"
-  #           platform: "linux/amd64"
-  #
-  #         - image: artixlinux
-  #           version: "latest"
-  #           platform: "linux/amd64"
-  #
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v6.0.2
-  #
-  #     - name: Set up QEMU
-  #       uses: docker/setup-qemu-action@v3
-  #
-  #     - name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v3
-  #
-  #     - name: Build Docker image
-  #       run: |
-  #         docker build \
-  #           --no-cache \
-  #           --rm \
-  #           --file=${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }} \
-  #           --tag=bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
-  #           ${{ matrix.distribution.image }}-ansible
-  #
-  #     - name: Push Docker image to Github Docker registry
-  #       run: |
-  #         # Login on Github Docker registry before pushing
-  #         echo "${{ secrets.GH_DOCKER_REGISTRY_TOKEN }}" | docker login docker.pkg.github.com -u bodsch --password-stdin
-  #
-  #         # Pushing image to Github Docker registry
-  #         docker tag \
-  #           bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
-  #           docker.pkg.github.com/bodsch/docker-ansible/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }}
-  #         docker push \
-  #           docker.pkg.github.com/bodsch/docker-ansible/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }}
-  #
-  #     - name: Push Docker image to Docker Hub
-  #       run: |
-  #         # Login on dockerhub.io before pushing
-  #         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-  #
-  #         # Pushing image to dockerhub
-  #         docker buildx build \
-  #           --push \
-  #           --platform ${{ matrix.distribution.platform }} \
-  #           --file=${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }} \
-  #           --tag=bodsch/ansible-${{ matrix.distribution.image }}:${{ matrix.distribution.version }} \
-  #           ${{ matrix.distribution.image }}-ansible
+      # QEMU nur nötig, wenn ihr später arm64 etc. ergänzt
+      - name: Set up QEMU
+        if: contains(matrix.distribution.platform, 'arm')
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR (via GITHUB_TOKEN)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: bodsch
+          password: ${{ secrets.GH_DOCKER_REGISTRY_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker metadata (tags/labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.IMAGE_DOCKERHUB }}
+            ${{ env.IMAGE_GHCR }}
+          tags: |
+            type=raw,value=${{ matrix.distribution.version }}
+            type=sha,format=short,prefix=${{ matrix.distribution.version }}-
+
+      - name: Build & push
+        uses: docker/build-push-action@v6
+        with:
+          context: archlinux-ansible
+          file: archlinux-ansible/Dockerfile.archlinux-${{ matrix.distribution.version }}
+          platforms: ${{ matrix.distribution.platform }}
+          push: true
+          pull: true
+          # optional: scheduled rebuild ohne Cache
+          no-cache: ${{ github.event_name == 'schedule' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
+

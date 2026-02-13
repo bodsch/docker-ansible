@@ -1,6 +1,6 @@
 ---
 
-name: Gentoo Ansible Image (build, publish)
+name: Alpine Ansible Image (build, publish)
 
 on:
   push:
@@ -8,9 +8,9 @@ on:
       - master
       - "feature/**"
     paths:
-      - "gentoo-ansible/**"
+      - "alpine-ansible/**"
       - "tests/**"
-      - ".github/workflows/build-arch.yml"
+      - ".github/workflows/build-alpine.yml"
       - "!README.md"
       - "!Makefile"
   pull_request:
@@ -18,18 +18,18 @@ on:
       - master
       - "feature/**"
     paths:
-      - "gentoo-ansible/**"
+      - "alpine-ansible/**"
       - "tests/**"
-      - ".github/workflows/build-arch.yml"
+      - ".github/workflows/build-alpine.yml"
       - "!README.md"
       - "!Makefile"
   schedule:
     # GitHub cron ist UTC
-    - cron: "5 25 * * 0"
+    - cron: "5 30 * * 0"
   workflow_dispatch:
 
 concurrency:
-  group: gentoo-ansible-${{ github.ref }}
+  group: alpine-ansible-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -37,11 +37,11 @@ permissions:
 
 env:
   # Ziel-Images
-  IMAGE_DOCKERHUB: bodsch/ansible-gentoo
-  IMAGE_GHCR: ghcr.io/bodsch/docker-ansible/ansible-gentoo
+  IMAGE_DOCKERHUB: bodsch/ansible-alpine
+  IMAGE_GHCR: ghcr.io/bodsch/docker-ansible/ansible-alpine
 
   # Lokales Test-Image
-  LOCAL_IMAGE: ansible-gentoo
+  LOCAL_IMAGE: ansible-alpine
 
   # Inspec
   INSPEC_VERSION: "5.21.29"
@@ -55,7 +55,7 @@ jobs:
       fail-fast: false
       matrix:
         distribution:
-          - image: gentoo
+          - image: alpine
             version: "latest"
             platform: "linux/amd64"
 
@@ -95,7 +95,7 @@ jobs:
       fail-fast: false
       matrix:
         distribution:
-          - image: gentoo
+          - image: alpine
             version: "latest"
             platform: "linux/amd64"
 

@@ -71,10 +71,10 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: debian-ansible
-          file: debian-ansible/Dockerfile.debian-${{ matrix.version }}
+          file: debian-ansible/Dockerfile.debian-${{ matrix.distribution.version }}
           platforms: linux/amd64
           load: true
-          tags: ansible-debian:${{ matrix.version }}
+          tags: ansible-debian:${{ matrix.distribution.version }}
           pull: true
           # Rebuild ohne Cache nur beim Scheduled Run (typisch für Security Updates)
           no-cache: ${{ github.event_name == 'schedule' }}

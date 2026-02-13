@@ -185,8 +185,8 @@ jobs:
       - name: Build & push
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ${{ matrix.distribution.image }}-ansible/${{ matrix.distribution.version }}/Dockerfile
+          context: debian-ansible
+          file: debian-ansible/Dockerfile.debian-${{ matrix.distribution.version }}
           platforms: ${{ matrix.distribution.platform }}
           push: true
           pull: true

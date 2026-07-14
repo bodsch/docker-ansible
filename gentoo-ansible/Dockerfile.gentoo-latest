@@ -4,7 +4,9 @@ FROM gentoo/portage:latest as portage
 # ------------------------------------------------------------------------------------------------
 
 # Gentoo stage3 is the second stage, basically an unpacked Gentoo Linux
-FROM gentoo/stage3:amd64-nomultilib-openrc
+# TARGETARCH wird von buildx gesetzt (amd64, arm64) und waehlt den passenden stage3-Tag
+ARG TARGETARCH
+FROM gentoo/stage3:${TARGETARCH}-openrc
 
 LABEL maintainer="bodsch <bodo@boone-schulz.de>"
 
@@ -45,7 +47,7 @@ RUN \
   rm -rf \
     /root/.cache \
     /tmp/* \
-    /usr/portage/* && \
+    /var/db/repos/gentoo/* && \
     /usr/bin/find \
         /usr/lib/ -type d -name __pycache__ -exec rm -rf {} 2> /dev/null \; || true  && \
     /usr/bin/find \

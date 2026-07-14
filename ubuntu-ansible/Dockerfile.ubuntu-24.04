@@ -27,11 +27,9 @@ RUN \
   systemctl disable getty@tty1.service && \
   ln --symbolic \
     /usr/bin/python3 /usr/bin/python && \
-  mkdir /etc/ansible && \
-  echo -e "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts && \
-  systemctl set-default multi-user.target && \
-  systemctl disable getty@tty1.service && \
-  apt purge \
+  mkdir -p /etc/ansible && \
+  printf '%s\n' '[local]' 'localhost ansible_connection=local' > /etc/ansible/hosts && \
+  apt-get purge --assume-yes \
     fuse \
     snapd \
     snap-confine \

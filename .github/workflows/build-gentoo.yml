@@ -64,10 +64,10 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Set up Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build (load for tests)
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ${{ matrix.distribution.image }}-ansible
           file: ${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
@@ -106,27 +106,27 @@ jobs:
       # QEMU nur nötig, wenn ihr später arm64 etc. ergänzt
       - name: Set up QEMU
         if: contains(matrix.distribution.platform, 'arm')
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to GHCR (via GITHUB_TOKEN)
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: bodsch
           password: ${{ secrets.GH_DOCKER_REGISTRY_TOKEN }}
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Docker metadata (tags/labels)
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: |
             ${{ env.IMAGE_DOCKERHUB }}
@@ -136,7 +136,7 @@ jobs:
             type=sha,format=short,prefix=${{ matrix.distribution.version }}-
 
       - name: Build & push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ${{ matrix.distribution.image }}-ansible
           file: ${{ matrix.distribution.image }}-ansible/Dockerfile.${{ matrix.distribution.image }}-${{ matrix.distribution.version }}

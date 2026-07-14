@@ -97,13 +97,13 @@ jobs:
         distribution:
           - image: gentoo
             version: "latest"
-            platform: "linux/amd64"
+            platform: linux/amd64,linux/arm64
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      # QEMU nur nötig, wenn ihr später arm64 etc. ergänzt
+      # QEMU wird für die arm64-Emulation beim Multi-Arch-Build benötigt
       - name: Set up QEMU
         if: contains(matrix.distribution.platform, 'arm')
         uses: docker/setup-qemu-action@v4

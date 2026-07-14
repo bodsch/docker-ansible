@@ -10,7 +10,7 @@ on:
     paths:
       - "gentoo-ansible/**"
       - "tests/**"
-      - ".github/workflows/build-arch.yml"
+      - ".github/workflows/build-gentoo.yml"
       - "!README.md"
       - "!Makefile"
   pull_request:
@@ -20,7 +20,7 @@ on:
     paths:
       - "gentoo-ansible/**"
       - "tests/**"
-      - ".github/workflows/build-arch.yml"
+      - ".github/workflows/build-gentoo.yml"
       - "!README.md"
       - "!Makefile"
   schedule:

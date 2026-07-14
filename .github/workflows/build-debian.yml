@@ -9,7 +9,7 @@ on:
     paths:
       - "debian-ansible/**"
       - "tests/**"
-      - ".github/workflows/debian.yml"
+      - ".github/workflows/build-debian.yml"
       - "!README.md"
       - "!Makefile"
   pull_request:
@@ -19,7 +19,7 @@ on:
     paths:
       - "debian-ansible/**"
       - "tests/**"
-      - ".github/workflows/debian.yml"
+      - ".github/workflows/build-debian.yml"
       - "!README.md"
       - "!Makefile"
   schedule:
